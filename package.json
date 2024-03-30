@@ -1,1 +1,10 @@
-{}
+{
+  "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mui/material": "^5.15.14",
+    "@wagmi/connectors": "^4.1.22",
+    "@wagmi/core": "^2.6.13",
+    "viem": "^2.9.5"
+  }
+}
