@@ -20,7 +20,7 @@ function OwnerModal() {
             alignItems: "center",
           }}
         >
-          <TextField label="Name" variant="outlined" />
+          <TextField label="Withdraw" variant="outlined" />
           <Button type="submit" variant="contained">
             Fund
           </Button>
