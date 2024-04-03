@@ -25,26 +25,26 @@ contract FundMeTest is Test {
         _;
     }
 
-    function testMinmumDollarIsFive() public view {
+    function test_MinmumDollarIsFive() public view {
         assertEq(fundMe.MINIMUM_USD(), 5e18);
     }
 
-    function testOwnerIsMessageSender() public view {
+    function test_OwnerIsMessageSender() public view {
         assertEq(fundMe.getOwner(), msg.sender);
     }
 
-    function testPriceFeedVersionIsV4() public view {
+    function test_PriceFeedVersionIsV4() public view {
         uint256 version = fundMe.getVersion();
         assertEq(version, 4);
     }
 
-    function testFundFailsWithoutEnoughETH() public {
+    function test_FundFailsWithoutEnoughETH() public {
         vm.expectRevert();
 
         fundMe.fund();
     }
 
-    function testFundingUpdatesMapping() public {
+    function test_FundingUpdatesMapping() public {
         vm.prank(MILIND);
         fundMe.fund{value: SEND_VALUE}(); //Funding 10ETH
 
@@ -52,7 +52,7 @@ contract FundMeTest is Test {
         assertEq(amountFunded, SEND_VALUE);
     }
 
-    function testFundingUpdatesFundersArray() public {
+    function test_FundingUpdatesFundersArray() public {
         vm.prank(MILIND);
 
         //send ETH to contract.
@@ -63,12 +63,12 @@ contract FundMeTest is Test {
         assertEq(zerothAddr, MILIND);
     }
 
-    function testOnlyOwnerCanWithdrawFromContract() public {
+    function test_OnlyOwnerCanWithdrawFromContract() public {
         //Fund 10Eth to the contract.
         //Check if the balance of the msg.sender is nearby 10ETH
     }
 
-    function testFailsWhenFundersTryToWithdraw() public funded {
+    function test_FailsWhenFundersTryToWithdraw() public funded {
         vm.prank(MILIND);
         vm.expectRevert(bytes("Only owner can call this function"));
 
@@ -76,7 +76,7 @@ contract FundMeTest is Test {
         fundMe.withdraw();
     }
 
-    function testWithdrawWithASingleFunder() public funded {
+    function test_WithdrawWithASingleFunder() public funded {
         //Arrange -> Arranging the testing setup
         uint256 startingOwnerBalance = fundMe.getOwner().balance;
         uint256 startingFundMeBalance = address(fundMe).balance;
