@@ -6,6 +6,7 @@ import FundersModal from "./components/FundersModal";
 import { WagmiWrapper } from "./components/WagmiWrapper";
 
 function App() {
+  const owner = true;
   return (
     <main>
       <Container
@@ -14,10 +15,7 @@ function App() {
       >
         <Typography variant="h1">FUND ME!!!</Typography>
         <WagmiWrapper>
-          <Paper>
-            <OwnerModal />
-            <FundersModal />
-          </Paper>
+          <Paper>{owner ? <OwnerModal /> : <FundersModal />}</Paper>
         </WagmiWrapper>
       </Container>
     </main>
