@@ -13,7 +13,6 @@ contract FundFundMe is Script {
         vm.startBroadcast();
         FundMe(payable(getMostRecentlyDeployed)).fund{value: SEND_VALUE}();
         vm.startBroadcast();
-        console.log("Funded FundMe with %s", SEND_VALUE);
     }
 
     function run() external {

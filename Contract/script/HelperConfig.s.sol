@@ -1,8 +1,5 @@
 //SPDX-License-Identifier: MIT
 
-//1. Deploy mock address of AggregatorV3Interface when on anvil.
-//2. Load contract addresses for different chains of AggregatorV3Interface
-
 pragma solidity ^0.8.18;
 
 import {Script} from "forge-std/Script.sol";

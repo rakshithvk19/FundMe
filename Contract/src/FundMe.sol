@@ -27,7 +27,6 @@ contract FundMe {
             msg.value.getConversionRate(s_priceFeed) >= MINIMUM_USD,
             "You need to spend more ETH!"
         );
-        // require(PriceConverter.getConversionRate(msg.value) >= MINIMUM_USD, "You need to spend more ETH!");
         s_addressToAmountFunded[msg.sender] += msg.value;
         s_funders.push(msg.sender);
     }
@@ -37,8 +36,6 @@ contract FundMe {
     }
 
     modifier onlyOwner() {
-        // require(msg.sender == owner);
-        // if (msg.sender != i_owner) revert FundMe__NotOwner();
         if (msg.sender != i_owner) revert("Only owner can call this function");
         _;
     }
@@ -54,14 +51,7 @@ contract FundMe {
             s_addressToAmountFunded[funders] = 0;
         }
         s_funders = new address[](0);
-        // // transfer
-        // payable(msg.sender).transfer(address(this).balance);
 
-        // // send
-        // bool sendSuccess = payable(msg.sender).send(address(this).balance);
-        // require(sendSuccess, "Send failed");
-
-        // call
         (bool callSuccess, ) = payable(msg.sender).call{
             value: address(this).balance
         }("");
