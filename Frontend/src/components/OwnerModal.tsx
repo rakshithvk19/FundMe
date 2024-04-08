@@ -2,16 +2,17 @@ import Paper from "@mui/material/Paper";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+// import Typography from "@mui/material/Typography";
+import { FundMeContract } from "../FundMe";
 
 function OwnerModal() {
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted");
   };
 
   return (
     <Paper sx={{ padding: "0.5em" }}>
+      {/* <Typography>{owner}</Typography> */}
       <form onSubmit={handleSubmit}>
         <Box
           sx={{

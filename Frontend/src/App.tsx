@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import OwnerModal from "./components/OwnerModal";
 import FundersModal from "./components/FundersModal";
 import { WagmiWrapper } from "./components/WagmiWrapper";
+import DisplayBalance from "./components/DisplayBalance";
 
 function App() {
   const owner = true;
@@ -15,6 +16,7 @@ function App() {
       >
         <Typography variant="h1">FUND ME!!!</Typography>
         <WagmiWrapper>
+          <DisplayBalance />
           <Paper>{owner ? <OwnerModal /> : <FundersModal />}</Paper>
         </WagmiWrapper>
       </Container>
