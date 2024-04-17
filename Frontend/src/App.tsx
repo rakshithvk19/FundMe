@@ -5,9 +5,25 @@ import OwnerModal from "./components/OwnerModal";
 import FundersModal from "./components/FundersModal";
 import { WagmiWrapper } from "./components/WagmiWrapper";
 import DisplayBalance from "./components/DisplayBalance";
+import DisplayFunders from "./components/DisplayFunders";
+
+import { useAccount } from "wagmi";
+// import DisplayVersion from "./components/DisplayVersion";
 
 function App() {
-  const owner = true;
+  // const account = useAccount();
+  // const checkOwner = (): boolean => {
+  //   let isOwner = false;
+
+  //   if (account === VITE_OWNER_ADDRESS) {
+  //     isOwner = true;
+  //   }
+
+  //   console.log(isOwner);
+  //   return isOwner;
+  // };
+
+  const owner = false;
   return (
     <main>
       <Container
@@ -16,7 +32,10 @@ function App() {
       >
         <Typography variant="h1">FUND ME!!!</Typography>
         <WagmiWrapper>
-          <DisplayBalance />
+          {/* <DisplayBalance /> */}
+          {/* <DisplayFunders /> */}
+
+          {/* {checkOwner()} */}
           <Paper>{owner ? <OwnerModal /> : <FundersModal />}</Paper>
         </WagmiWrapper>
       </Container>
