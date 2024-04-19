@@ -2,7 +2,7 @@ import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import OwnerModal from "./components/OwnerModal";
-import FundersModal from "./components/FundersModal";
+import { FundersModal } from "./components/FundersModal";
 import { WagmiWrapper } from "./components/WagmiWrapper";
 import DisplayBalance from "./components/DisplayBalance";
 import DisplayFunders from "./components/DisplayFunders";

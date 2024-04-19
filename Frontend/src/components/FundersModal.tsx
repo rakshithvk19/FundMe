@@ -1,78 +1,108 @@
-import React, { useEffect, useState } from "react";
-import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import {
+  Paper,
+  TextField,
+  Button,
+  Box,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 
 import { useWriteContract } from "wagmi";
 import { parseEther } from "ethers";
-
 import { FundMeABI } from "../FundMe.abi";
 
-function FundersModal() {
+const FundersModal: React.FC = () => {
   const [fundingEth, setFundingEth] = useState<string>("0");
-  const [showForm, setShowForm] = useState<boolean>(true);
-  const [txHash, setTxHash] = useState<string | null>(null);
-  const [showError, setShowError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showFundingForm, setShowFundingForm] = useState<boolean>(true);
+  const [showErrorModal, setShowErrorModal] = useState<boolean>(false);
+  const [errorMsg, setErrorMessage] = useState<string>(
+    "Something went wrong. Please try again!"
+  );
 
   const {
     data: hash,
     error: fundingError,
-    isError: isFundingError,
-    isIdle: isFundingIdle,
-    isPending: isFundingPending,
+    status: fundingStatus,
+    reset: fundingReset,
     writeContract,
   } = useWriteContract();
 
-  const handleFundAmount = (event: React.ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    if (fundingStatus === "idle") {
+    }
+
+    if (fundingStatus === "pending") {
+      setShowFundingForm(false);
+    }
+
+    if (fundingStatus === "error") {
+      if (fundingError.name === "TransactionExecutionError") {
+        setErrorMessage(
+          "User Denied the transcation. Please accept the transaction"
+        );
+      }
+      setShowErrorModal(true);
+    }
+
+    if (fundingStatus === "success") {
+    }
+  }, [fundingStatus]);
+
+  const handleFundAmount = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setFundingEth(event.target.value);
   };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
+    //Throws error if funding ETH is zero.
+    if (fundingEth === "0") {
+      setShowFundingForm(false);
+      setShowErrorModal(true);
+      setErrorMessage("0.5 ETH is the minimum ETH to fund.");
+      return;
+    }
+
     try {
-      const tx = writeContract({
+      writeContract({
         abi: FundMeABI,
         functionName: "fund",
-        address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+        address: import.meta.env.VITE_ANVIL_FUNDME_ADDRESS,
         chainId: 31337,
         args: [],
         value: parseEther(fundingEth),
       });
-
-      // setTxHash(tx);
-      // setShowForm(false);
     } catch (error) {
-      setErrorMessage(error.message);
-      setShowError(true);
-    } finally {
-      setShowForm(true);
+      if (error instanceof TypeError) {
+        setErrorMessage("Please enter ETH value in numbers");
+      }
+      setShowFundingForm(false);
+      setShowErrorModal(true);
     }
   };
 
-  const handleRetry = () => {
-    setShowForm(true);
-    setShowError(false);
-  };
-
-  const handleShowForm = () => {
-    setShowForm(true);
-    setTxHash(null);
-  };
-
-  //Use Effect to clear the form details.
-  useEffect(() => {
+  const handleRetry = (): void => {
+    setErrorMessage("");
     setFundingEth("0");
-  }, [showForm]);
+    setShowErrorModal(false);
+    setShowFundingForm(true);
+  };
+
+  const handleFundAgain = (): void => {
+    setFundingEth("0");
+    setShowErrorModal(false);
+    setShowFundingForm(true);
+    fundingReset();
+  };
 
   return (
     <Paper sx={{ padding: "1em" }}>
       <Typography gutterBottom>Fund ETH to Contract</Typography>
-      {showForm ? (
+
+      {showFundingForm && (
         <form onSubmit={handleSubmit}>
           <Box
             sx={{
@@ -91,27 +121,44 @@ function FundersModal() {
             </Button>
           </Box>
         </form>
-      ) : isFundingPending ? (
-        <CircularProgress />
-      ) : null}
+      )}
 
-      {/* isTxPending ? (
-        <CircularProgress />
-      ) : txHash ? (
-        <Box>
-          <Typography>Transaction Hash: {txHash}</Typography>
-          <Button onClick={handleShowForm}>Fund Again</Button>
-        </Box>
-      ) : showError ? (
-        <Box>
-          <Typography>Error: {errorMessage}</Typography>
+      {showErrorModal && (
+        <Box
+          border={"2px solid"}
+          borderColor={"error.main"}
+          borderRadius={2}
+          padding={1}
+        >
+          <Typography>Error: {errorMsg}</Typography>
           <Button variant="contained" onClick={handleRetry}>
             Retry
           </Button>
         </Box>
-      ) : null} */}
+      )}
+
+      {fundingStatus === "pending" && <CircularProgress />}
+
+      {fundingStatus === "success" && (
+        <>
+          <Box
+            border={"2px solid"}
+            borderColor={"success.main"}
+            borderRadius={2}
+            padding={1}
+          >
+            <Typography>Transaction Successful</Typography>
+            <Typography>Thank you for your contribution</Typography>
+            <Typography>Please check the transaction hash below:</Typography>
+            <Typography variant="subtitle2"> {hash}</Typography>
+            <Button variant="contained" onClick={handleFundAgain}>
+              Fund Again
+            </Button>
+          </Box>
+        </>
+      )}
     </Paper>
   );
-}
+};
 
-export default FundersModal;
+export { FundersModal };
